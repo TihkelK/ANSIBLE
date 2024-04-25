@@ -1,0 +1,79 @@
+Vagrant.configure("2") do |config|
+
+config.vm.define "ansible-tihkel" do |ansible|
+  ansible.vm.box = "generic/debian12"
+  ansible.vm.network "public_network"
+  ansible.vm.network "private_network", ip: "172.20.10.100", virtualbox__intnet: "ansible_tihkel"
+  ansible.vm.hostname = "ansible-tihkel"
+  ansible.vm.synced_folder "./ansible_data", "/vagrant_data"
+  ansible.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  vb.name = "ANSIBLE-tihkel"
+    end
+  ansible.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y fish tmux mc git ansible tree sshpass yamllint ansible-lint
+  SHELL
+  end
+config.vm.define "ubuntu1-tihkel" do |ubuntu|
+  ubuntu.vm.box = "generic/ubuntu2204"
+  ubuntu.vm.network "public_network"
+  ubuntu.vm.network "private_network", ip: "172.20.10.110", virtualbox__intnet: "ansible_tihkel"
+  ubuntu.vm.hostname = "ubuntu1-tihkel"
+  ubuntu.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  vb.name = "UBUNTU1-tihkel"
+    end
+  ubuntu.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y fish tmux mc git apache2
+  SHELL
+  end
+config.vm.define "ubuntu2-tihkel" do |ubuntu|
+  ubuntu.vm.box = "generic/ubuntu2204"
+  ubuntu.vm.network "public_network"
+  ubuntu.vm.network "private_network", ip: "172.20.10.120", virtualbox__intnet: "ansible_tihkel"
+  ubuntu.vm.hostname = "ubuntu2-tihkel"
+  ubuntu.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  vb.name = "UBUNTU2-tihkel"
+    end
+  ubuntu.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y fish tmux mc git apache2
+  SHELL
+  end
+config.vm.define "oracle1-tihkel" do |oracle|
+  oracle.vm.box = "generic/oracle9"
+  oracle.vm.network "public_network"
+  oracle.vm.network "private_network", ip: "172.20.10.200", virtualbox__intnet: "ansible_tihkel"
+  oracle.vm.hostname = "oracle1-tihkel"
+  oracle.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  vb.name = "ORACLE1-tihkel"
+    end
+  oracle.vm.provision "shell", inline: <<-SHELL
+    dnf update -y
+    dnf install -y fish tmux mc git httpd
+  SHELL
+  end
+config.vm.define "oracle2-tihkel" do |oracle|
+  oracle.vm.box = "generic/oracle9"
+  oracle.vm.network "public_network"
+  oracle.vm.network "private_network", ip: "172.20.10.201", virtualbox__intnet: "ansible_tihkel"
+  oracle.vm.hostname = "oracle2-tihkel"
+  oracle.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+  vb.name = "ORACLE2-tihkel"
+    end
+  oracle.vm.provision "shell", inline: <<-SHELL
+    dnf update -y
+    dnf install -y fish tmux mc git httpd
+  SHELL
+  end
+end

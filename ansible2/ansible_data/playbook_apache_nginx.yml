@@ -1,0 +1,29 @@
+- name: Check if Apache is installed and replace with NGINX
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Check if Apache package is installed
+      ansible.builtin.package:
+        name: apache2
+      register: apache_package_info
+      ignore_errors: true
+      become: yes
+
+    - name: Uninstall Apache if installed
+      ansible.builtin.package:
+        name: apache2
+        state: absent
+      when: apache_package_info is succeeded
+      become: yes
+
+    - name: Install NGINX
+      ansible.builtin.package:
+        name: nginx
+        state: present
+      become: yes
+
+    - name: Start NGINX service
+      ansible.builtin.service:
+        name: nginx
+        state: started
+      become: yes

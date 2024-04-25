@@ -1,0 +1,14 @@
+---
+- name: Update packages on all managed machines
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: Update packages
+      ansible.builtin.package:
+        name: '*'
+        state: latest
+      register: update_result
+
+    - debug:
+        msg: "{{ update_result }}"

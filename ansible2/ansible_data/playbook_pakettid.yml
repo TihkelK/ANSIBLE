@@ -1,0 +1,24 @@
+---
+- name: Check if packages are installed
+  hosts: all
+  tasks:
+    - name: Check if package is installed using apt
+      ansible.builtin.command: dpkg -l | grep '^ii' | grep -E "Fish|Tmux|mc|git"
+      register: apt_result
+      ignore_errors: true
+      when: "'apt' in group_names"
+
+    - name: Check if package is installed using dnf
+      ansible.builtin.command: rpm -qa | grep -E "Fish|tmux|mc|git"
+      register: dnf_result
+      ignore_errors: true
+      when: "'dnf' in group_names"
+
+    - debug:
+        msg: "Package {{ item }} is installed"
+      loop:
+        - Fish
+        - Tmux
+        - mc
+        - git
+      when: apt_result is success or dnf_result is success
